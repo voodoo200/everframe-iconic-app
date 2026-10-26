@@ -51,7 +51,10 @@ submitContact=async function(e){
    if(res.error)throw res.error;
    await refresh();closeEditor();toast('Сохранено в защищённой базе');
   }catch(err){toast('Не удалось сохранить: '+err.message)}finally{busy=false}
- document.getElementById('contactForm').addEventListener('submit', submitContact);
+ const form = document.getElementById('contactForm');
+const cleanForm = form.cloneNode(true);
+form.replaceWith(cleanForm);
+cleanForm.addEventListener('submit', submitContact);
  };
  removeContact=async function(){
   if(busy||!editing||!confirm('Удалить контакт без возможности отмены?'))return;
