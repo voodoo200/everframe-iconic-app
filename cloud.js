@@ -38,7 +38,8 @@ if(!cfg.supabaseUrl?.startsWith('https://')||!cfg.supabaseAnonKey||cfg.supabaseA
  });
  document.getElementById('signOut').addEventListener('click',async()=>{await db.auth.signOut();contacts=[];render();gate.classList.remove('hide');setStatus('Вы вышли из системы.');});
  // В рабочем режиме все записи читаются и сохраняются только на сервере.
- submitContact=async function(e){
+ document.getElementById('contactForm').removeEventListener('submit', submitContact);
+submitContact=async function(e){
   e.preventDefault();if(busy||!workspaceId)return;
   const c={};fields.forEach(k=>c[k]=document.getElementById('f_'+k).value.trim());
   if(!c.name){toast('Укажите имя');return}
@@ -50,6 +51,7 @@ if(!cfg.supabaseUrl?.startsWith('https://')||!cfg.supabaseAnonKey||cfg.supabaseA
    if(res.error)throw res.error;
    await refresh();closeEditor();toast('Сохранено в защищённой базе');
   }catch(err){toast('Не удалось сохранить: '+err.message)}finally{busy=false}
+ document.getElementById('contactForm').addEventListener('submit', submitContact);
  };
  removeContact=async function(){
   if(busy||!editing||!confirm('Удалить контакт без возможности отмены?'))return;
